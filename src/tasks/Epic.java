@@ -6,13 +6,10 @@ import java.util.Objects;
 public class Epic extends Task {
     private ArrayList<Integer> subTaskIds;
 
+
     public Epic(String name, String description, TaskStatus status) {
         super(name, description, TaskStatus.NEW);
         subTaskIds = new ArrayList<>();
-    }
-
-    public Epic(String name, String description, TaskStatus status, int id) {
-        super(name, description, TaskStatus.NEW, id);
     }
 
     public void addSubtaskId(int id) {
@@ -57,6 +54,7 @@ public class Epic extends Task {
                 ", status=" + status +
                 '}';
     }
+
 }
 
 

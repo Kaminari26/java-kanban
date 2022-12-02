@@ -44,12 +44,6 @@ public class Task {
         this.name = name;
         this.status = status;
     }
-    public Task (String name, String description, TaskStatus status, int id){
-        this.description = description;
-        this.name = name;
-        this.status = status;
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {
