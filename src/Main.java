@@ -23,8 +23,5 @@ public class Main {
         manager.addSubTask(sub2);
         manager.addSubTask(sub3);
         System.out.println(manager.getSubTask(2));
-
-
-//  я не понял из задачи, нужно ли подтерать мои тесты, оставил как есть
     }
 }
