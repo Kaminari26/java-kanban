@@ -19,10 +19,10 @@ public class Main {
         manager.addTask(task2);
         manager.addEpic(epic1);
         manager.addEpic(epic2);
-        manager.addSubask(sub1);
-        manager.addSubask(sub2);
-        manager.addSubask(sub3);
-        System.out.println(manager.epicAndCo(2));
+        manager.addSubTask(sub1);
+        manager.addSubTask(sub2);
+        manager.addSubTask(sub3);
+        System.out.println(manager.getSubTask(2));
 
 
 //  я не понял из задачи, нужно ли подтерать мои тесты, оставил как есть

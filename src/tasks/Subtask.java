@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class  Subtask extends Task {
 
-    private Integer epicId ;
+    private Integer epicId;
 
     public Integer getEpicId() {
         return epicId;
