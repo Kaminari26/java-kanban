@@ -35,7 +35,6 @@ public class Main {
         im.getTask(2);
         im.getTask(2);
        im.getEpic(3);
-        ;
         System.out.println( "история: " + inMemoryHistoryManager.getHistory());
 
 
