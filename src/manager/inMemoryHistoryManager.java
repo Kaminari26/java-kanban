@@ -8,7 +8,7 @@ public class inMemoryHistoryManager implements HistoryManager {
     final static int MaxHistoryCount = 10;
 
     @Override
-    public  void add(Task task) {
+    public void add(Task task) {
         history.add(task);
         if (history.size() > MaxHistoryCount) {
 

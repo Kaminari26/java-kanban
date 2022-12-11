@@ -49,30 +49,6 @@ public interface Manager {
     public void removeSubtask(Integer id);
 
     public List<Integer> getSubTask(int epicId);
-
-  /*  private void checkStatusEpic(Integer epicId) {
-        Epic epic = epics.get(epicId);
-        int done = 0;
-        int inProgress = 0;
-
-        for (Integer subTaskId : epic.getSubtaskIds()) {
-            TaskStatus subTaskStatus = subTasks.get(subTaskId).getStatus();
-
-            if (subTaskStatus == TaskStatus.DONE) {
-                done = done + 1;
-            } else if (subTaskStatus == TaskStatus.IN_PROGRESS) {
-                inProgress = inProgress + 1;
-            }
-        }
-
-        if (inProgress < 0) {
-            epic.setStatus(TaskStatus.IN_PROGRESS);
-        } else if (done > 0 && done == epic.getSubtaskIds().size()) {
-            epic.setStatus(TaskStatus.DONE);
-        } else {
-            epic.setStatus(TaskStatus.NEW);
-        }
-    } */
 }
 
 

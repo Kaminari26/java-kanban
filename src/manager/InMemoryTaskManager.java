@@ -10,20 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements Manager {
-    InMemoryTaskManager imhm = new InMemoryTaskManager();
+    inMemoryHistoryManager inMemoryHistoryManager = new inMemoryHistoryManager();
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
-    // Изменить с object на Task
-    // Изменить с ArrayList на List
-   //    List<Task> history = new ArrayList<>();
+
     Integer countId = 0;
-  //  static final int MaxHistoryCount = 10;
-
-   // public List<Task> getHistory() {
-   //     return history;
- //   }
-
     @Override
 
     public Integer addTask(Task task) {
@@ -94,19 +86,19 @@ public class InMemoryTaskManager implements Manager {
 
     @Override
     public Task getTask(int number) {
-       inMemoryHistoryManager.add(tasks.get(number));
+          inMemoryHistoryManager.add(tasks.get(number));
         return tasks.get(number);
     }
 
     @Override
     public Epic getEpic(int number) {
-
+        inMemoryHistoryManager.add(epics.get(number));
         return epics.get(number);
     }
 
     @Override
     public Subtask getSubtask(int number) {
-
+        inMemoryHistoryManager.add(subTasks.get(number));
         return subTasks.get(number);
     }
 
@@ -172,9 +164,6 @@ public class InMemoryTaskManager implements Manager {
         return List.copyOf(epics.get(epicId).getSubtaskIds());
     }
 
-
-    // Этот метод тоже можно вынести в IManager но сделать protected.
-    // Так как по идее все менеджеры должны уметь изменять статус у задач
     private void checkStatusEpic(Integer epicId) {
         Epic epic = epics.get(epicId);
         int done = 0;
@@ -198,17 +187,6 @@ public class InMemoryTaskManager implements Manager {
             epic.setStatus(TaskStatus.NEW);
         }
     }
-
- /*   public void addAndCheckHistory(Task historyElement) {
-
-        history.add(historyElement);
-
-
-        if (history.size() > MaxHistoryCount) {
-
-            history.remove(0);
-        }
-    } */
 }
 
 
