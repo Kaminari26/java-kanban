@@ -1,17 +1,9 @@
-import manager.InMemoryTaskManager;
-import manager.Manager;
-import manager.Managers;
-import manager.inMemoryHistoryManager;
+import manager.*;
 import tasks.*;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager im = new InMemoryTaskManager();
-            inMemoryHistoryManager inMemoryHistoryManager = new inMemoryHistoryManager();
-
-
+        ITaskManager im = new InMemoryTaskTaskManager();
 
         System.out.println("начало");
         Task task1 = new Task("T1", "asfas", TaskStatus.NEW);
@@ -35,7 +27,8 @@ public class Main {
         im.getTask(2);
         im.getTask(2);
        im.getEpic(3);
-        System.out.println( "история: " + inMemoryHistoryManager.getHistory());
+        System.out.println( "история: " + im.getHistory());
+
 
 
     }

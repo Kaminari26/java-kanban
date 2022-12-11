@@ -1,16 +1,10 @@
 package manager;
 
-import tasks.Task;
-
-import java.util.List;
-
-public class Managers <T extends Manager>  {
-    public T Default;
-
-    public T getDefault(){
-        return Default;
+public class Managers {
+    public static ITaskManager getDefault(){ // так до конца и не понял, это вроде бы на что то похоже
+        return new InMemoryTaskTaskManager();
     }
-    public List<Task> getDefaultHistory(){
-        return inMemoryHistoryManager.history;
+    public static HistoryManager getDefaultHistory(){
+        return new InMemoryHistoryManager();
     }
 }

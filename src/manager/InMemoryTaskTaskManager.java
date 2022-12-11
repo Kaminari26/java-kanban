@@ -5,19 +5,18 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InMemoryTaskManager implements Manager {
-    inMemoryHistoryManager inMemoryHistoryManager = new inMemoryHistoryManager();
+public class InMemoryTaskTaskManager implements ITaskManager {
+
+    final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
 
     Integer countId = 0;
     @Override
-
     public Integer addTask(Task task) {
         if (task == null) {
             return null;
@@ -86,7 +85,7 @@ public class InMemoryTaskManager implements Manager {
 
     @Override
     public Task getTask(int number) {
-          inMemoryHistoryManager.add(tasks.get(number));
+        inMemoryHistoryManager.add(tasks.get(number));
         return tasks.get(number);
     }
 
@@ -186,6 +185,9 @@ public class InMemoryTaskManager implements Manager {
         } else {
             epic.setStatus(TaskStatus.NEW);
         }
+    }
+    public List<Task> getHistory(){
+        return inMemoryHistoryManager.getHistory();
     }
 }
 
