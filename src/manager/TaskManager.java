@@ -6,7 +6,7 @@ import tasks.Task;
 
 import java.util.List;
 
-public interface ITaskManager {
+public interface TaskManager {
 
 
     Integer addTask(Task task);
@@ -28,6 +28,7 @@ public interface ITaskManager {
     void clearAllSubtask();
 
     Task getTask(int number);
+
     Epic getEpic(int number);
 
     Subtask getSubtask(int number);
@@ -35,11 +36,15 @@ public interface ITaskManager {
     void updateTask(Task newTask);
 
     void updateEpic(Epic newEpic);
+
     void updateSubtask(Subtask newSubtask);
 
     void removeTask(Integer id);
+
     void removeEpic(Integer id);
+
     void removeSubtask(Integer id);
+
     List<Task> getHistory();
 
     List<Integer> getSubTask(int epicId);
