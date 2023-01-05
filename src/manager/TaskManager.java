@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-
     Integer addTask(Task task);
 
     Integer addEpic(Epic epic);

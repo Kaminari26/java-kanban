@@ -4,73 +4,83 @@ import tasks.Task;
 
 import java.util.*;
 
-public class InMemoryHistoryManager<T> implements HistoryManager {
-        public Node<T> head;
-        public Node<T> tail;
-        private Map<Integer, Node> storyMap = new HashMap<>();
+public class InMemoryHistoryManager implements HistoryManager {
+    private Node head;
+    private Node tail;
+    private final Map<Integer, Node> storyMap = new HashMap<>();
 
-        private void linkLast(Task task) {
-            final Node node = new Node(task);
-            if (head == null) {
-                head = node;
+    private void linkLast(Task task) {
+        final Node node = new Node(task, tail, null);
+        if (head == null) {
+            head = node;
+        } else {
+            tail.next = node;
+        }
+        tail = node;
+    }
+
+    private void removeNode(int id) {
+        final Node node = storyMap.remove(id);
+        if (node == null) {
+            return;
+        }
+        if (node.prev != null) {
+            node.prev.next = node.next;
+            if (node.next == null) {
+                tail = node.prev;
             } else {
-                node.prev = tail;
+                node.next.prev = node.prev;
             }
-            tail = node;
+        } else {
+            head = node.next;
+            if (head == null) {
+                tail = null;
+            } else {
+                head.prev = null;
+            }
         }
-
-        public void removeNode(Node node) {
-            if (node.prev != null){
-               if(node.next != null){
-                   node.prev = node.next;
-                   node.next = node.prev;
-
-               }else {
-                   node.prev = null;
-               }
-                storyMap.remove(node);
-            }
-       }
-        public ArrayList getTasks(){
-            Node node = tail;
-            for (int i = 0; i < storyMap.size(); i++){
-                if (node.prev != null){
-                    history.add(node);
-                    node = node.prev;
-                }else {
-                    history.add(node);
-
-                }
-            }
-            return history;
+    }
+    private ArrayList<Task> getTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        Node node = head;
+        while (node != null) {
+            tasks.add(node.data);
+            node = node.next;
         }
-
-
-    ArrayList<Node<T>> history = new ArrayList<>(); // надеюсь я понял про сбор в один лист
-    private final static int Max_History_Capacity = 10;
+        return tasks;
+    }
 
     @Override
     public void add(Task task) {
-          if (storyMap.containsKey(task.getId())) {
-            removeNode(storyMap.get(task.getId()));
+        if (task == null) {
+            return;
         }
-
-        storyMap.put(task.getId(), new Node<>(task));
+        final int id = task.getId();
+        removeNode(id);
         linkLast(task);
-          if (storyMap.size() > Max_History_Capacity) {
-            removeNode(tail);
-        }
+        storyMap.put(id, tail);
     }
 
     @Override
     public void remove(int id) {
-
+        removeNode(id);
     }
 
     @Override
-    public ArrayList getHistory() {
-        getTasks();
-        return history;
+    public List<Task> getHistory() {
+        return getTasks();
+    }
+    class Node {
+
+        public Task data;
+        public Node next;
+        public Node prev;
+
+        public Node(Task task, Node prev, Node next) {
+            this.data = task;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 }
 
