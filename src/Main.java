@@ -7,8 +7,6 @@ public class Main {
         System.out.println("начало");
         Task task1 = new Task("T1", "asfas", TaskStatus.NEW);
         Task task2 = new Task("T2", "as1111fas", TaskStatus.NEW);
-        task1.setId(55);
-        task2.setId(66);
 
         Epic epic1 = new Epic("EP1", "as1111fas", TaskStatus.NEW);
         Subtask sub1 = new Subtask("SUB", "as1111fas", TaskStatus.NEW, 3);
@@ -17,8 +15,6 @@ public class Main {
 
 
         Epic epic2 = new Epic("EP2", "as13333333333s", TaskStatus.NEW);
-
-        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
