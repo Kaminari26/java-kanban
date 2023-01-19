@@ -4,15 +4,16 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TaskManager {
 
-    Integer addTask(Task task);
+    void addTask(Task task) throws IOException;
 
-    Integer addEpic(Epic epic);
+    void addEpic(Epic epic) throws IOException;
 
-    Integer addSubTask(Subtask subtask);
+    void addSubTask(Subtask subtask) throws IOException;
 
     List<Epic> getEpicList();
 
@@ -20,17 +21,17 @@ public interface TaskManager {
 
     List<Task> getTaskList();
 
-    void clearAllTask();
+    void clearAllTask() throws IOException;
 
-    void clearAllEpic();
+    void clearAllEpic() throws IOException;
 
-    void clearAllSubtask();
+    void clearAllSubtask() throws IOException;
 
-    Task getTask(int number);
+    Task getTask(int number) throws IOException;
 
-    Epic getEpic(int number);
+    Epic getEpic(int number) throws IOException;
 
-    Subtask getSubtask(int number);
+    Subtask getSubtask(int number) throws IOException;
 
     void updateTask(Task newTask);
 
@@ -38,11 +39,11 @@ public interface TaskManager {
 
     void updateSubtask(Subtask newSubtask);
 
-    void removeTask(Integer id);
+    void removeTask(Integer id) throws IOException;
 
-    void removeEpic(Integer id);
+    void removeEpic(Integer id) throws IOException;
 
-    void removeSubtask(Integer id);
+    void removeSubtask(Integer id) throws IOException;
 
     List<Task> getHistory();
 

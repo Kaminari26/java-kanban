@@ -1,5 +1,7 @@
 package tasks;
 
+import manager.TypeTask;
+
 import java.util.Objects;
 
 public class  Subtask extends Task {
@@ -14,10 +16,19 @@ public class  Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(String name, String description, TaskStatus status, Integer epicId)  {
-        super(name, description, TaskStatus.NEW);
-         this.epicId = epicId;
+    public Subtask(String name, TypeTask typeTask, String description, Integer epicId)  {
+        super(name,typeTask,description, TaskStatus.NEW);
+        this.epicId = epicId;
+    }
 
+    public Subtask(String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId)  {
+        super(name,typeTask,description, status);
+         this.epicId = epicId;
+    }
+
+    public Subtask(int id, String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId)  {
+        super(id,typeTask, name, status, description);
+        this.epicId = epicId;
     }
     @Override
     public boolean equals(Object o) {

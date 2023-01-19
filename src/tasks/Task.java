@@ -1,12 +1,15 @@
 package tasks;
 
+import manager.TypeTask;
+
 import java.util.Objects;
 
-public class Task  {
+public class Task {
     protected String name;
     protected String description;
     protected int id;
     protected TaskStatus status;
+    protected TypeTask type;
 
     public String getName() {
         return name;
@@ -32,6 +35,10 @@ public class Task  {
         this.id = id;
     }
 
+    public TypeTask getType() {
+        return type;
+    }
+
     public TaskStatus getStatus() {
         return status;
     }
@@ -39,10 +46,20 @@ public class Task  {
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
-    public Task (String name, String description, TaskStatus status){
+    public Task(String name, TypeTask type, String description, TaskStatus status ){
         this.description = description;
         this.name = name;
         this.status = status;
+        this.type = type;
+    }
+
+    public Task(int id, TypeTask type, String name,TaskStatus status, String description ) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+
     }
 
     @Override
