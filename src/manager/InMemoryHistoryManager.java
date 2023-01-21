@@ -7,7 +7,7 @@ import java.util.*;
 public class InMemoryHistoryManager implements HistoryManager {
     private Node head;
     private Node tail;
-    private final Map<Integer, Node> storyMap = new HashMap<>();
+    protected final Map<Integer, Node> storyMap = new HashMap<>();
 
 
     private void linkLast(Task task) {
