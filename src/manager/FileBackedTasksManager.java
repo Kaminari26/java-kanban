@@ -4,11 +4,16 @@ import tasks.*;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
 public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
     private final File file;
+
+    public File getFile() {
+        return file;
+    }
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -108,6 +113,13 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
     public void removeEpic(Integer id){
         super.removeEpic(id);
         save();
+    }
+
+    @Override
+    public LocalDateTime craftLocalDate(String string) {
+        LocalDateTime localDateTime =  super.craftLocalDate(string);
+        save();
+        return localDateTime;
     }
 
     @Override
@@ -212,33 +224,6 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
             return subtask;
         }
         return epics.get(id);
-    }
-
-    public static void main(String[] args) {
-        File file = new File("./resources/fileWriter.CSV");
-        TaskManager manager = Managers.getDefault();
-
-        Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-        Task task4 = new Task("T4",TypeTask.TASK, "asf444444s", TaskStatus.NEW);
-        Task task2 = new Task("T2",TypeTask.TASK, "as1111fas", TaskStatus.NEW);
-
-        Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-        Subtask sub1 = new Subtask("SUB",TypeTask.SUBTASK, "as1111fas", TaskStatus.NEW, 4);
-        Subtask sub2 = new Subtask("SUB2",TypeTask.SUBTASK, "as1111fas", TaskStatus.NEW,3);
-        Subtask sub3 = new Subtask("SUB3",TypeTask.SUBTASK, "33333333", TaskStatus.NEW,3);
-
-        FileBackedTasksManager tasksManager = FileBackedTasksManager.loadFromFile(file);
-        Epic epic2 = new Epic("EP2", TypeTask.SUBTASK,"as13333333333s", TaskStatus.NEW);
-        tasksManager.addTask(task1);
-        tasksManager.addTask(task4);
-        tasksManager.addTask(task2);
-        tasksManager.addEpic(epic1);
-        tasksManager.getTask(1);
-        tasksManager.getTask(2);
-        tasksManager.getTask(3);
-        tasksManager.addSubTask(sub1);
-        System.out.println("history: " + tasksManager.getHistory());
-        System.out.println("Tasks: " + tasksManager.getTaskList());
     }
     }
 

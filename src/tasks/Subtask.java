@@ -14,10 +14,10 @@ public class  Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(String name, TypeTask typeTask, String description, Integer epicId)  {
-        super(name,typeTask,description, TaskStatus.NEW);
-        this.epicId = epicId;
-    }
+    //  public Subtask(String name, TypeTask typeTask, String description, Integer epicId)  {
+    //    super(name,typeTask,description, TaskStatus.NEW);
+   //     this.epicId = epicId;
+  //  }
 
     public Subtask(String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId)  {
         super(name,typeTask,description, status);
