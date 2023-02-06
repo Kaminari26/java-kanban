@@ -4,9 +4,7 @@ import tasks.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskTaskManager implements TaskManager {
 
@@ -220,6 +218,19 @@ public class InMemoryTaskTaskManager implements TaskManager {
             }
         }
         epic.setEndTime(localDateTime);
+    }
+    public ArrayList<Task> getPrioritizedTasks() {
+        TreeSet<Task> treeTasksSortTime = new TreeSet<>();
+        if (!tasks.isEmpty()) {
+            treeTasksSortTime.addAll(tasks.values());
+        }
+        if (!epics.isEmpty()){
+            treeTasksSortTime.addAll(epics.values());
+        }
+        if (!subTasks.isEmpty()) {
+            treeTasksSortTime.addAll(subTasks.values());
+        }
+        return new ArrayList<>(treeTasksSortTime);
     }
 
     private void checkStatusEpic(Integer epicId) {

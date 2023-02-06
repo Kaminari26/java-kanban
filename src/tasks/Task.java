@@ -108,4 +108,18 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
+    public int compareTo(Task task){
+        if (this.startTime == null) {
+            return 1;
+        } else if (task.getStartTime() == null) {
+            return -1;
+        } else if (this.startTime == null && task.getStartTime() == null) {
+            return 1;
+        } else if (this.startTime.isAfter(task.getStartTime())) {
+            return 1;
+        }
+        return -1;
+    }
 }
+
