@@ -115,12 +115,6 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
         save();
     }
 
-    @Override
-    public LocalDateTime craftLocalDate(String string) {
-        LocalDateTime localDateTime =  super.craftLocalDate(string);
-        save();
-        return localDateTime;
-    }
 
     @Override
     public List<Task> getHistory() {
@@ -133,10 +127,10 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
         save();
     }
 
-    @Override
-    public List<Integer> getSubTask(int epicId) {
-        return super.getSubTask(epicId);
-    }
+    //  @Override
+   // public List<Integer> getSubTask(int epicId) {
+    //    return super.getSubTask(epicId);
+  //  }
 
     protected void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {

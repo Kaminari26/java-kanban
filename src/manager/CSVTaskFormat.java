@@ -1,13 +1,15 @@
 package manager;
 
+import Helpers.LocalDateTimeHelper;
 import tasks.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CSVTaskFormat {
     public static String getHeader() {
-        return "id,type,name,status,description,epic";
+        return "id,type,name,status,description,epic,startTime,duration";
     }
 
     private static String getAllTasksInString(List<Task> taskList) {
@@ -25,13 +27,16 @@ public class CSVTaskFormat {
                 task.getName(),
                 task.getStatus().toString(),
                 task.getDescription(),
-                (task.getType().equals(TypeTask.SUBTASK) ? ((Subtask)task).getEpicId().toString() : ""));
+                (task.getType().equals(TypeTask.SUBTASK) ? ((Subtask)task).getEpicId().toString() : ""),
+                task.getStartTime().toString(),
+                task.getDuration().toString());
         return str;
     }
 
     protected static Task fromString(String value){
         String[] splitString = value.split(",");
         TypeTask typeTask = TypeTask.valueOf(splitString[1]);
+
         switch (typeTask) {
             case TASK:
                 return new Task(
@@ -39,20 +44,26 @@ public class CSVTaskFormat {
                         typeTask,
                         splitString[2],
                         TaskStatus.valueOf(splitString[3]),
-                        splitString[4] != null ? splitString[4] : "");
+                        splitString[4] != null ? splitString[4] : "",
+                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]),
+                        Long.getLong(splitString[7]));
             case SUBTASK:
                 return new Subtask(Integer.parseInt(splitString[0]),
                         splitString[2],
                         typeTask,
                         splitString[4] != null ? splitString[4] : "",
                         TaskStatus.valueOf(splitString[3]),
-                        Integer.parseInt(splitString[5]));
+                        Integer.parseInt(splitString[5]),
+                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]),
+                        Long.getLong(splitString[7]));
             case EPIC:
                 return new Epic(Integer.parseInt(splitString[0]),
                         splitString[2],
                         typeTask,
                         splitString[4] != null ? splitString[4] : "",
-                        TaskStatus.valueOf(splitString[3]));
+                        TaskStatus.valueOf(splitString[3]),
+                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]),
+                        Long.getLong(splitString[7]));
         }
 
         return null;

@@ -8,11 +8,25 @@ import java.util.Objects;
 public class Task {
     protected String name;
     protected String description;
+
     protected int id;
     protected TaskStatus status;
     protected TypeTask type;
     protected LocalDateTime startTime;
-    protected LocalDateTime duration;
+
+    protected Long duration;
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public void setDuration2(long minutes) {
+        this.duration = minutes;
+    }
 
     public LocalDateTime getStartTime() {
         return startTime;
@@ -22,16 +36,8 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getDuration() {
-        return duration;
-    }
-
-    public void setDuration(LocalDateTime duration) {
-        this.duration = duration;
-    }
-
     public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(Duration.between(startTime,duration).toMinutes()) ;
+        return startTime.plusMinutes(duration) ;
     }
 
     public String getName() {
@@ -82,6 +88,16 @@ public class Task {
         this.name = name;
         this.status = status;
         this.description = description;
+
+    }
+    public Task(int id, TypeTask type, String name,TaskStatus status, String description, LocalDateTime startTime, Long duration  ) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
 
     }
 

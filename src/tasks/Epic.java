@@ -18,6 +18,10 @@ public class Epic extends Task {
         super(name,typeTask, description, status);
         subTaskIds = new ArrayList<>();
     }
+    public Epic(int id, String name, TypeTask typeTask, String description, TaskStatus status, LocalDateTime startTime, Long duration) {
+        super(id,typeTask,name, status, description, startTime, duration);
+        subTaskIds = new ArrayList<>();
+    }
 
 
     public Epic(int Id, String name, TypeTask typeTask, String description, TaskStatus status) {
@@ -34,14 +38,8 @@ public class Epic extends Task {
         return endTime;
     }
 
-    @Override
-    public LocalDateTime getDuration() {
-        return startTime.plusMinutes(endTime.getMinute());
-    }
-
-    @Override
-    public void setDuration(LocalDateTime duration) {
-        super.setDuration(duration);
+    public Long getDuration() {
+        return Duration.between(startTime,endTime).toMinutes();
     }
 
     public void setEndTime(LocalDateTime endTime) {

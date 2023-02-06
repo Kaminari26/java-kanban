@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import tasks.*;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
@@ -295,5 +297,28 @@ public abstract class TaskManagerTest<T extends TaskManager> {
      manager.addSubTask(sub1);
      manager.addSubTask(sub2);
      assertEquals(2,manager.getSubTask(1).size(),"Неверное количество сабтасков у эпика");
+    }
+
+    @Test
+    void getPrioritizedTasks() {
+    }
+
+    @Test
+    void setEpicStartTimeTask() {
+        Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
+        task1.setStartTime(manager.convertToLocalDateTime("06.02.2023 19:30"));
+        assertEquals(" ", task1.getStartTime());
+
+    }
+
+    @Test
+    void setEndTimeEpic() {
+    }
+
+    @Test
+    void convertToLocalDateTime() {
+      //  DD.MM.yyyy HH:mm
+       LocalDateTime localDateTime = manager.convertToLocalDateTime("11.22.33 23:11");
+       assertEquals("11/22/33",localDateTime);
     }
 }

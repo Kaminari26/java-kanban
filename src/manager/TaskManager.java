@@ -5,6 +5,7 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -14,8 +15,6 @@ public interface TaskManager {
     void addEpic(Epic epic);
 
     void addSubTask(Subtask subtask);
-    LocalDateTime craftLocalDate(String stringDate);
-
 
     List<Epic> getEpicList();
 
@@ -49,7 +48,9 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    List<Integer> getSubTask(int epicId);
+  //  List<Integer> getSubTask(int epicId);
+
+    ArrayList<Task> getPrioritizedTasks();
 }
 
 
