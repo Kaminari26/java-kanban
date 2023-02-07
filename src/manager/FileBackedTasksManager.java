@@ -18,65 +18,66 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
-         @Override
+
+    @Override
     public void addTask(Task task) {
         super.addTask(task);
         save();
     }
 
     @Override
-    public void addEpic(Epic epic){
+    public void addEpic(Epic epic) {
         super.addEpic(epic);
         save();
     }
 
     @Override
-    public void addSubTask(Subtask subtask){
+    public void addSubTask(Subtask subtask) {
         super.addSubTask(subtask);
         save();
     }
 
     @Override
-    public void clearAllTask(){
+    public void clearAllTask() {
         super.clearAllTask();
         save();
     }
 
     @Override
-    public void clearAllEpic(){
+    public void clearAllEpic() {
         super.clearAllEpic();
         save();
     }
 
     @Override
-    public void clearAllSubtask(){
+    public void clearAllSubtask() {
         super.clearAllSubtask();
         save();
     }
 
     @Override
-    public Task getTask(int number){
+    public Task getTask(int number) {
         Task task = super.getTask(number);
         save();
         return task;
     }
 
     @Override
-    public Epic getEpic(int number){
+    public Epic getEpic(int number) {
         Epic epic = super.getEpic(number);
         save();
         return epic;
     }
 
     @Override
-    public Subtask getSubtask(int number){
+    public Subtask getSubtask(int number) {
         Subtask subtask = super.getSubtask(number);
         save();
         return subtask;
     }
 
     @Override
-    public void removeTask(Integer id){
+    public void removeTask(Integer id) {
         super.removeTask(id);
         save();
     }
@@ -110,7 +111,7 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
     }
 
     @Override
-    public void removeEpic(Integer id){
+    public void removeEpic(Integer id) {
         super.removeEpic(id);
         save();
     }
@@ -122,15 +123,10 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
     }
 
     @Override
-    public void removeSubtask(Integer id){
+    public void removeSubtask(Integer id) {
         super.removeSubtask(id);
         save();
     }
-
-    //  @Override
-   // public List<Integer> getSubTask(int epicId) {
-    //    return super.getSubTask(epicId);
-  //  }
 
     protected void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -219,5 +215,5 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
         }
         return epics.get(id);
     }
-    }
+}
 

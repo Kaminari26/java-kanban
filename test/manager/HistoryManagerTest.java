@@ -13,15 +13,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class HistoryManagerTest  {
 
     InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+
     protected Task task;
     protected Epic epic;
     protected Subtask subtask;
     HistoryManager historyManager;
+
     @BeforeEach
     void setUp() {
         historyManager = new InMemoryHistoryManager();
         task = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-        epic = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
+        epic = new Epic("EP1", TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
         subtask = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, epic.getId());
     }
 
@@ -32,6 +34,7 @@ class HistoryManagerTest  {
         assertNotNull(history, "История не пустая");
         assertEquals(1, history.size(), "История не пустая");
     }
+
     @Test
     void addTwice() {
         historyManager.add(task);
@@ -40,6 +43,7 @@ class HistoryManagerTest  {
         assertNotNull(history, "История не пустая");
         assertEquals(1, history.size(), "История не пустая");
     }
+
     @Test
     void addDifferentTask() {
         historyManager.add(task);
@@ -80,6 +84,7 @@ class HistoryManagerTest  {
         assertNotNull(history, "История пустая");
         assertTrue(history.isEmpty(), "История пустая");
     }
+
     @Test
     void removeMiddle() {
         historyManager.add(task);
@@ -98,6 +103,7 @@ class HistoryManagerTest  {
         assertEquals(task, history.get(0), "Задачи в порядке добавления");
         assertEquals(subtask, history.get(1), "Задачи в порядке добавления");
     }
+
     @Test
     void removeNotExist() {
         historyManager.remove(task.getId());

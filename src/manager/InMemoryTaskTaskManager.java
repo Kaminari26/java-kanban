@@ -22,29 +22,22 @@ public class InMemoryTaskTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) {
-        try {
             if (task.getType().equals(TypeTask.TASK)) {
                 countId++;
                 task.setId(countId);
                 tasks.put(countId, task);
             }
-        }catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
         add(task);
     }
 
     @Override
     public void addEpic(Epic epic) {
-        try {
             if (epic.getType().equals(TypeTask.EPIC)) {
                 countId++;
                 epic.setId(countId);
                 epics.put(countId, epic);
             }
-        } catch(NullPointerException e) {
-            System.out.println(e.getMessage());
-        }
+
     }
 
     @Override
@@ -183,13 +176,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
         checkStatusEpic(epicId);
     }
 
- //   @Override
-  //  public List<Integer> getSubTask(int epicId) {
-  //      return List.copyOf(epics.get(epicId).getSubtaskIds());
-  //  }
-
     @Override
-
     public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
     }
@@ -224,6 +211,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
         checkStatusEpic(epicId);
         updateEpicDuration(epic);
     }
+
     private void add(Task task) {
         final LocalDateTime startTime = task.getStartTime();
         final LocalDateTime endTime = task.getEndTime();
@@ -240,22 +228,14 @@ public class InMemoryTaskTaskManager implements TaskManager {
         }
         prioritizedTasks.add(task);
     }
+
     private void delete(Task task) {
         prioritizedTasks.remove(task);
     }
+
     @Override
-    public ArrayList<Task> getPrioritizedTasks() {
-        TreeSet<Task> treeTasksSortTime = new TreeSet<>();
-        if (!tasks.isEmpty()) {
-            treeTasksSortTime.addAll(tasks.values());
-        }
-        if (!epics.isEmpty()){
-            treeTasksSortTime.addAll(epics.values());
-        }
-        if (!subTasks.isEmpty()) {
-            treeTasksSortTime.addAll(subTasks.values());
-        }
-        return new ArrayList<>(treeTasksSortTime);
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 
     private void checkStatusEpic(Integer epicId) {
@@ -279,12 +259,6 @@ public class InMemoryTaskTaskManager implements TaskManager {
             epic.setStatus(TaskStatus.DONE);
         } else {
             epic.setStatus(TaskStatus.NEW);
-        }
-
-    }
-
-    private class TaskValidationException extends RuntimeException {
-        public TaskValidationException(String s) {
         }
     }
 }

@@ -15,17 +15,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>{
     private File file;
+
+    public FileBackedTasksManagerTest() {
+        super(new FileBackedTasksManager(new File("./resources/historyManagerTest.csv")));
+
+    }
     @BeforeEach
     public void setUp() {
         file = new File("./resources/historyManagerTest.csv");
     }
+
     @AfterEach
     protected void tearDown() {
         assertTrue(file.delete());
-    }
-    public FileBackedTasksManagerTest() {
-        super(new FileBackedTasksManager(new File("./resources/historyManagerTest.csv")));
-
     }
 
 
@@ -45,22 +47,23 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         File file = new File("./resources/HistoryManagerTestFileEmptyFile.csv");
         FileBackedTasksManager manager = FileBackedTasksManager.loadFromFile(file);
 
-        assertEquals(0,manager.getHistory().size(),"Был загружен не пустой лист" );
-        assertEquals(0,manager.getTaskList().size(),"Был загружен не пустой лист");
-        assertEquals(0,manager.getEpicList().size(),"Был загружен не пустой лист");
-        assertEquals(0,manager.getTaskList().size(),"Был загружен не пустой лист");
+        assertEquals(0, manager.getHistory().size(), "Был загружен не пустой лист" );
+        assertEquals(0, manager.getTaskList().size(), "Был загружен не пустой лист");
+        assertEquals(0 ,manager.getEpicList().size(), "Был загружен не пустой лист");
+        assertEquals(0, manager.getTaskList().size(), "Был загружен не пустой лист");
         file.delete();
+
     } @Test
     void loadFromFileNormalTest() {
 
         File file = new File("./resources/HistoryManagerNormalTest.csv");
         FileBackedTasksManager managerLoadFile = FileBackedTasksManager.loadFromFile(file);
 
-        assertEquals(3,manager.getHistory().size(),"Неверное количество элементов в листе");
-        assertEquals(3,manager.getTaskList().size(),"Неверное количество элементов в листе");
-        assertEquals(1,manager.getEpicList().size(),"Неверное количество элементов в листе");
-        assertEquals(3,manager.getTaskList().size(),"Неверное количество элементов в листе");
-        assertEquals(manager.getHistory(),managerLoadFile.getHistory());
+        assertEquals(3, manager.getHistory().size(), "Неверное количество элементов в листе");
+        assertEquals(3, manager.getTaskList().size(), "Неверное количество элементов в листе");
+        assertEquals(1, manager.getEpicList().size(), "Неверное количество элементов в листе");
+        assertEquals(3, manager.getTaskList().size(), "Неверное количество элементов в листе");
+        assertEquals(manager.getHistory(), managerLoadFile.getHistory());
     }
 
 }

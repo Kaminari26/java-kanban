@@ -8,7 +8,8 @@ import org.opentest4j.AssertionFailedError;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EpicTest {
+class EpicTest { // я не специально, просто непонятно куда это пристроить((( и про кодстайл простите пожалуйста, я стараюсь, но не приучил еще себя делать номрально((
+    // в тз написано отдельно про тестирование этих вещей, хотя получается я этим проверку протектед класса делаю((
     TaskManager manager = Managers.getDefault();
     @Test
     void nullEpicSubtaskTest() {
