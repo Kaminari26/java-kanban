@@ -9,6 +9,9 @@ import java.util.*;
 public class InMemoryTaskTaskManager implements TaskManager {
 
     protected final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+
+    protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subTasks = new HashMap<>();
@@ -28,6 +31,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
         }catch(Exception e) {
             System.out.println(e.getMessage());
         }
+        add(task);
     }
 
     @Override
@@ -54,6 +58,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
                     updateEpic(subtask.getEpicId());
                 }
             }
+        add(subtask);
         }
 
     @Override
@@ -121,6 +126,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
             return;
         }
         tasks.put(newTask.getId(), newTask);
+        add(newTask);
     }
 
     @Override
@@ -146,11 +152,13 @@ public class InMemoryTaskTaskManager implements TaskManager {
         }
         subTasks.put(newSubtask.getId(), newSubtask);
         updateEpic(newSubtask.getEpicId());
+        add(newSubtask);
     }
 
     @Override
     public void removeTask(Integer id) {
         inMemoryHistoryManager.remove(id);
+        delete(tasks.get(id));
         tasks.remove(id);
     }
 
@@ -169,6 +177,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
     public void removeSubtask(Integer id) {
         Integer epicId = subTasks.get(id).getEpicId();
         epics.get(epicId).removeSubtask(id);
+        delete(subTasks.get(id));
         subTasks.remove(id);
         inMemoryHistoryManager.remove(id);
         checkStatusEpic(epicId);
@@ -215,6 +224,25 @@ public class InMemoryTaskTaskManager implements TaskManager {
         checkStatusEpic(epicId);
         updateEpicDuration(epic);
     }
+    private void add(Task task) {
+        final LocalDateTime startTime = task.getStartTime();
+        final LocalDateTime endTime = task.getEndTime();
+        for (Task t : prioritizedTasks) {
+            final LocalDateTime existStart = t.getStartTime();
+            final LocalDateTime existEnd = t.getEndTime();
+            if (!endTime.isAfter(existStart)) {// newTimeEnd <= existTimeStart
+                continue;
+            }
+            if (!existEnd.isAfter(startTime)) {// existTimeEnd <= newTimeStart
+                continue;
+            }
+            throw new TaskValidationException("Задача пересекаются с id=" + t.getId() + " c " + existStart + " по " + existEnd);
+        }
+        prioritizedTasks.add(task);
+    }
+    private void delete(Task task) {
+        prioritizedTasks.remove(task);
+    }
     @Override
     public ArrayList<Task> getPrioritizedTasks() {
         TreeSet<Task> treeTasksSortTime = new TreeSet<>();
@@ -255,6 +283,10 @@ public class InMemoryTaskTaskManager implements TaskManager {
 
     }
 
+    private class TaskValidationException extends RuntimeException {
+        public TaskValidationException(String s) {
+        }
+    }
 }
 
 

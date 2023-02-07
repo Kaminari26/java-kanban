@@ -45,8 +45,10 @@ public class CSVTaskFormat {
                         splitString[2],
                         TaskStatus.valueOf(splitString[3]),
                         splitString[4] != null ? splitString[4] : "",
-                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]),
-                        Long.getLong(splitString[7]));
+                        splitString[5] != null ?
+                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]) : null,
+                        splitString[6] != null ?
+                        Long.getLong(splitString[7]) : null);
             case SUBTASK:
                 return new Subtask(Integer.parseInt(splitString[0]),
                         splitString[2],
@@ -54,16 +56,20 @@ public class CSVTaskFormat {
                         splitString[4] != null ? splitString[4] : "",
                         TaskStatus.valueOf(splitString[3]),
                         Integer.parseInt(splitString[5]),
-                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]),
-                        Long.getLong(splitString[7]));
+                        splitString[6] != null ?
+                                LocalDateTimeHelper.convertToLocalDateTime(splitString[6]) : null,
+                        splitString[7] != null ?
+                                Long.getLong(splitString[7]) : null);
             case EPIC:
                 return new Epic(Integer.parseInt(splitString[0]),
                         splitString[2],
                         typeTask,
                         splitString[4] != null ? splitString[4] : "",
                         TaskStatus.valueOf(splitString[3]),
-                        LocalDateTimeHelper.convertToLocalDateTime(splitString[6]),
-                        Long.getLong(splitString[7]));
+                        splitString[6] != null ?
+                                LocalDateTimeHelper.convertToLocalDateTime(splitString[6]) : null,
+                        splitString[7] != null ?
+                                Long.getLong(splitString[7]) : null);
         }
 
         return null;

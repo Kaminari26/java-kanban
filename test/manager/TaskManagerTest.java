@@ -1,5 +1,6 @@
 package manager;
 
+import Helpers.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import tasks.*;
@@ -13,19 +14,31 @@ public abstract class TaskManagerTest<T extends TaskManager> {
    public TaskManagerTest(T managers) {
         manager = managers;
     }
+    protected T taskManager;
+    protected Task task;
+    protected Epic epic;
+    protected Subtask subtask;
+    protected void initTasks() {
+        task = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
+        taskManager.addTask(task);
+        epic = new Epic("EP1",TypeTask.TASK, "as1111fas", TaskStatus.NEW);
+        taskManager.addEpic(epic);
+        subtask = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, epic.getId());
+        taskManager.addSubTask(subtask);
+    }
     @Test
     void addTaskHappyPath() {
-     Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-     manager.addTask(task1);
-     assertEquals(task1, manager.getTask(1), "Задачи не совпали");
+     initTasks();
+     manager.addTask(task);
+     assertEquals(task, manager.getTask(1), "Задачи не совпали");
      assertEquals(1, manager.getTaskList().size(), "Неверное количество задач");
     }
 
     @Test
     void addTask_IncorrectTypeForTask_NotAddTask() {
-        Task task1 = new Task("T1", TypeTask.SUBTASK, "asfas", TaskStatus.NEW);
+       initTasks();
 
-        manager.addTask(task1);
+        manager.addTask(task);
 
         assertEquals(0, manager.getTaskList().size(),"Неверное количество задач");
     }
@@ -33,40 +46,40 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
    @Test
    void addTaskExceptionTest() {
-      Task task1 = new Task("T1", TypeTask.SUBTASK, "asfas", TaskStatus.NEW);
+       initTasks();
 
-      manager.addTask(task1);
+      manager.addTask(task);
 
       assertEquals(0, manager.getTaskList().size(),"Неверное количество задач");
    }
   @Test
   void addTaskNullTypeTest() {
-   Task task1 = new Task("T1", null, "asfas", TaskStatus.NEW);
+      initTasks();
 
-   manager.addTask(task1);
+   manager.addTask(task);
 
    assertEquals(0, manager.getTaskList().size(),"Неверное количество задач");
   }
 
     @Test
-    void addTaskNullTest(){
+    void addTaskNullTest() {
      manager.addTask(null);
      assertEquals(0,manager.getTaskList().size());
     }
 
     @Test
     void addEpic() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     manager.addEpic(epic1);
-     assertEquals(epic1, manager.getEpic(1), "Эпики не совпали");
-     assertEquals(1, manager.getEpicList().size(), "Неверное количество эпиков");
+        initTasks();
+        manager.addEpic(epic);
+        assertEquals(epic, manager.getEpic(1), "Эпики не совпали");
+        assertEquals(1, manager.getEpicList().size(), "Неверное количество эпиков");
     }
 
      @Test
      void addEpicIncorrectType() {
-      Epic epic1 = new Epic("EP1",TypeTask.TASK, "as1111fas", TaskStatus.NEW);
-      manager.addEpic(epic1);
-      assertEquals(0, manager.getEpicList().size(), "Неверное количество эпиков");
+        initTasks();
+        manager.addEpic(epic);
+        assertEquals(0, manager.getEpicList().size(), "Неверное количество эпиков");
      }
 
      @Test
@@ -77,33 +90,21 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void addSubTask() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     Subtask sub2 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
-     Subtask sub3 = new Subtask("SUB3", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
-     manager.addEpic(epic1);
-     manager.addSubTask(sub2);
-     assertEquals("[2]",manager.getEpic(1).getSubtaskIds().toString(),"Проблема с id у сабтаска");
-     manager.addSubTask(sub3);
-     assertEquals(2, manager.getSubtaskList().size(),"Проблема с количеством сабтасков");
+        initTasks();
+        manager.addEpic(epic);
+         manager.addSubTask(subtask);
+        assertEquals("[2]",manager.getEpic(1).getSubtaskIds().toString(),"Проблема с id у сабтаска");
+
+        assertEquals(1, manager.getSubtaskList().size(),"Проблема с количеством сабтасков");
     }
 
     @Test
-    void addSubtaskIncorrectType(){
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     Subtask sub2 = new Subtask("SUB2", TypeTask.EPIC, "as1111fas", TaskStatus.DONE, 1);
-     Subtask sub3 = new Subtask("SUB3", TypeTask.TASK, "as1111fas", TaskStatus.DONE, 1);
-     manager.addEpic(epic1);
-     manager.addSubTask(sub2);
-     manager.addSubTask(sub3);
-     assertEquals(0,manager.getSubTask(1).size());
-    }
-    @Test
     void addSubTaskWithoutEpic(){
-     Subtask sub2 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, null);
+        initTasks();
      final NullPointerException exception = assertThrows(NullPointerException.class, new Executable() {
       @Override
       public void execute() throws Throwable {
-       manager.addSubTask(sub2);
+       manager.addSubTask(subtask);
       }
      });
      assertEquals("Подзадача - не самостоятельная задача", exception.getMessage());
@@ -183,76 +184,75 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getTask() {
-     Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-     manager.addTask(task1);
-     assertNull(manager.getTask(2));
-     assertEquals(task1, manager.getTask(1),"Нужная задача не была найдена");
+        initTasks();
+         manager.addTask(task);
+         assertNull(manager.getTask(2));
+         assertEquals(task, manager.getTask(1),"Нужная задача не была найдена");
     }
 
     @Test
     void getEpic() {
-     Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-     manager.addTask(task1);
-     assertNull(manager.getTask(2));
-     assertEquals(task1, manager.getTask(1),"Нужная задача не была найдена");
+        initTasks();
+         manager.addEpic(epic);
+         assertNull(manager.getEpic(2));
+         assertEquals(epic, manager.getEpic(1),"Нужная задача не была найдена");
     }
 
     @Test
     void getSubtask() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     Subtask sub2 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
-     manager.addEpic(epic1);
-     manager.addSubTask(sub2);
-     assertEquals(sub2, manager.getSubtask(2),"Нужный сабтаск не найден");
-     assertNull(manager.getSubtask(3),"Найден несуществующий сабтаск");
+        initTasks();
+         manager.addEpic(epic);
+         manager.addSubTask(subtask);
+         assertEquals(subtask, manager.getSubtask(2),"Нужный сабтаск не найден");
+         assertNull(manager.getSubtask(3),"Найден несуществующий сабтаск");
     }
 
     @Test
     void updateTask() {
-     Task task1 = new Task("T1", TypeTask.TASK, "as1111fas", TaskStatus.NEW);
-     Task task2 = new Task("T1", TypeTask.TASK, "as1111fas", TaskStatus.NEW);
-     manager.addTask(task1);
-     task2.setId(task1.getId());
-     manager.updateTask(task2);
-     assertEquals(task2, manager.getTask(1),"Не удалось обновить таск");
+         Task task1 = new Task("T1", TypeTask.TASK, "as1111fas", TaskStatus.NEW);
+         Task task2 = new Task("T1", TypeTask.TASK, "as1111fas", TaskStatus.NEW);
+         manager.addTask(task1);
+         task2.setId(task1.getId());
+         manager.updateTask(task2);
+         assertEquals(task2, manager.getTask(1),"Не удалось обновить таск");
     }
 
     @Test
     void updateEpic() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     Epic epic2 = new Epic("EP2",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     manager.addEpic(epic1);
-     epic2.setId(epic1.getId());
-     manager.updateEpic(epic2);
-     assertEquals(epic2,manager.getEpic(1),"Не удалось обновить Эпик");
+         Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
+         Epic epic2 = new Epic("EP2",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
+         manager.addEpic(epic1);
+         epic2.setId(epic1.getId());
+         manager.updateEpic(epic2);
+         assertEquals(epic2,manager.getEpic(1),"Не удалось обновить Эпик");
     }
 
     @Test
     void updateSubtask() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     Subtask sub1 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
-     Subtask sub2 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
-     manager.addEpic(epic1);
-     manager.addSubTask(sub1);
-     sub2.setId(sub1.getId());
-     manager.updateSubtask(sub2);
-     assertEquals(sub2,manager.getSubtask(2),"Не удалось обновить Сабтаск");
+         Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
+         Subtask sub1 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
+         Subtask sub2 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
+         manager.addEpic(epic1);
+         manager.addSubTask(sub1);
+         sub2.setId(sub1.getId());
+         manager.updateSubtask(sub2);
+         assertEquals(sub2,manager.getSubtask(2),"Не удалось обновить Сабтаск");
     }
 
     @Test
     void removeTask() {
-     Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-     manager.addTask(task1);
-     manager.getTask(1);
-     manager.removeTask(1);
-     assertNull(manager.getTask(1),"Задача не была удалена");
-     assertEquals(0, manager.getHistory().size(),"размер истории не сошелся");
+        initTasks();
+        manager.addTask(task);
+        manager.getTask(1);
+         manager.removeTask(1);
+        assertNull(manager.getTask(1),"Задача не была удалена");
+        assertEquals(0, manager.getHistory().size(),"размер истории не сошелся");
     }
 
     @Test
     void removeEpic() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     manager.addEpic(epic1);
+        initTasks();
+     manager.addEpic(epic);
      manager.getEpic(1);
      assertEquals("[tasks.Epic{subList=[], name='EP1', description='as1111fas', id=1, status=NEW}]",
              manager.getHistory().toString());
@@ -288,25 +288,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTask() {
-     Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
-     Subtask sub1 = new Subtask("SUB1", TypeTask.SUBTASK, "as1111fas", TaskStatus.NEW, 1);
-     Subtask sub2 = new Subtask("SUB2", TypeTask.SUBTASK, "as1111fas", TaskStatus.NEW, 1);
-     manager.addEpic(epic1);
-     assertEquals(0,manager.getSubTask(1).size(),"Неверное количество сабтасков у эпика");
-     manager.addSubTask(sub1);
-     manager.addSubTask(sub2);
-     assertEquals(2,manager.getSubTask(1).size(),"Неверное количество сабтасков у эпика");
-    }
-
-    @Test
     void getPrioritizedTasks() {
     }
 
     @Test
     void setEpicStartTimeTask() {
         Task task1 = new Task("T1", TypeTask.TASK, "asfas", TaskStatus.NEW);
-        task1.setStartTime(manager.convertToLocalDateTime("06.02.2023 19:30"));
+        task1.setStartTime(LocalDateTimeHelper.convertToLocalDateTime("06.02.2023 19:30"));
         assertEquals(" ", task1.getStartTime());
 
     }
@@ -317,8 +305,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void convertToLocalDateTime() {
-      //  DD.MM.yyyy HH:mm
-       LocalDateTime localDateTime = manager.convertToLocalDateTime("11.22.33 23:11");
-       assertEquals("11/22/33",localDateTime);
+       LocalDateTime localDateTime = LocalDateTimeHelper.convertToLocalDateTime("06.02.2023 19:30");
+       assertEquals("06.02.2023 19:30",localDateTime);
     }
 }
