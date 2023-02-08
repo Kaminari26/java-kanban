@@ -1,4 +1,4 @@
-package tasks;
+package ru.yandex.mishalov.schedule.tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,11 +18,11 @@ public class Epic extends Task {
         super(name,typeTask, description, status);
         subTaskIds = new ArrayList<>();
     }
+
     public Epic(int id, String name, TypeTask typeTask, String description, TaskStatus status, LocalDateTime startTime, Long duration) {
         super(id,typeTask,name, status, description, startTime, duration);
         subTaskIds = new ArrayList<>();
     }
-
 
     public Epic(int Id, String name, TypeTask typeTask, String description, TaskStatus status) {
         super(Id, typeTask, name, TaskStatus.NEW, description);

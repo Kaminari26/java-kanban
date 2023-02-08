@@ -1,9 +1,10 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
-import helpers.LocalDateTimeHelper;
+import ru.yandex.mishalov.schedule.helpers.LocalDateTimeHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import tasks.*;
+import ru.yandex.mishalov.schedule.manager.TaskManager;
+import ru.yandex.mishalov.schedule.tasks.*;
 
 import java.time.LocalDateTime;
 

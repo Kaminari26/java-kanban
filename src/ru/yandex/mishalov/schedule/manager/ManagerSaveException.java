@@ -1,4 +1,4 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
 public class ManagerSaveException extends RuntimeException {
     public ManagerSaveException() {

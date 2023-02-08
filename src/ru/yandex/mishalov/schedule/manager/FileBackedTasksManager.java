@@ -1,10 +1,12 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
-import tasks.*;
+import ru.yandex.mishalov.schedule.tasks.Epic;
+import ru.yandex.mishalov.schedule.tasks.Subtask;
+import ru.yandex.mishalov.schedule.tasks.Task;
+
 
 import java.io.*;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.*;
 
 

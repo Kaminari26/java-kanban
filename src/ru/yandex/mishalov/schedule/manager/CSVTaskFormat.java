@@ -1,7 +1,7 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
-import helpers.LocalDateTimeHelper;
-import tasks.*;
+import ru.yandex.mishalov.schedule.helpers.LocalDateTimeHelper;
+import ru.yandex.mishalov.schedule.tasks.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class CSVTaskFormat {
         return str;
     }
 
-    protected static Task fromString(String value){
+    protected static Task fromString(String value) {
         String[] splitString = value.split(",");
         TypeTask typeTask = TypeTask.valueOf(splitString[1]);
 

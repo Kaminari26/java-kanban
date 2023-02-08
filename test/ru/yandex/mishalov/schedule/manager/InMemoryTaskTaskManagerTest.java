@@ -1,19 +1,25 @@
-package tasks;
+package ru.yandex.mishalov.schedule.manager;
 
-import manager.Managers;
-import manager.TaskManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.AssertionFailedError;
+import ru.yandex.mishalov.schedule.tasks.Epic;
+import ru.yandex.mishalov.schedule.tasks.Subtask;
+import ru.yandex.mishalov.schedule.tasks.TaskStatus;
+import ru.yandex.mishalov.schedule.tasks.TypeTask;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class EpicTest { // я не специально, просто непонятно куда это пристроить((( и про кодстайл простите пожалуйста, я стараюсь, но не приучил еще себя делать номрально((
-    // в тз написано отдельно про тестирование этих вещей, хотя получается я этим проверку протектед класса делаю((
-    TaskManager manager = Managers.getDefault();
+class InMemoryTaskTaskManagerTest extends TaskManagerTest<InMemoryTaskTaskManager> {
+
+    public InMemoryTaskTaskManagerTest() {
+        super(new InMemoryTaskTaskManager());
+    }
+
     @Test
     void nullEpicSubtaskTest() {
-        Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
+        Epic epic1 = new Epic("EP1", TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
         manager.addEpic(epic1);
         final AssertionFailedError exception = assertThrows(AssertionFailedError.class,
                 new Executable() {
@@ -32,8 +38,9 @@ class EpicTest { // я не специально, просто непонятн�
         manager.addEpic(epic1);
         assertEquals(TaskStatus.NEW,manager.getEpic(1).getStatus());
     }
+
     @Test
-    void epicAllSubtaskStatusNew(){
+    void epicAllSubtaskStatusNew() {
         Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
         Subtask sub1 = new Subtask("SUB1",TypeTask.SUBTASK, "as1111fas", TaskStatus.NEW, 1);
         Subtask sub2 = new Subtask("SUB2",TypeTask.SUBTASK, "as1111fas", TaskStatus.NEW, 1);
@@ -42,8 +49,9 @@ class EpicTest { // я не специально, просто непонятн�
         manager.addSubTask(sub2);
         assertEquals(TaskStatus.NEW,manager.getEpic(1).getStatus());
     }
+
     @Test
-    void epicAllSubtaskStatusDone(){
+    void epicAllSubtaskStatusDone() {
         Epic epic1 = new Epic("EP1",TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
         Subtask sub1 = new Subtask("SUB1",TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
         Subtask sub2 = new Subtask("SUB2",TypeTask.SUBTASK, "as1111fas", TaskStatus.DONE, 1);
@@ -52,6 +60,7 @@ class EpicTest { // я не специально, просто непонятн�
         manager.addSubTask(sub2);
         assertEquals(TaskStatus.DONE,manager.getEpic(1).getStatus());
     }
+
     @Test
     void epicAllSubtaskStatusDoneOrNew() {
         Epic epic1 = new Epic("EP1", TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
@@ -62,6 +71,7 @@ class EpicTest { // я не специально, просто непонятн�
         manager.addSubTask(sub2);
         assertEquals(TaskStatus.IN_PROGRESS, manager.getEpic(1).getStatus());
     }
+
     @Test
     void epicAllSubtaskStatusInProgress() {
         Epic epic1 = new Epic("EP1", TypeTask.EPIC, "as1111fas", TaskStatus.NEW);
@@ -72,5 +82,4 @@ class EpicTest { // я не специально, просто непонятн�
         manager.addSubTask(sub2);
         assertEquals(TaskStatus.IN_PROGRESS, manager.getEpic(1).getStatus());
     }
-
 }

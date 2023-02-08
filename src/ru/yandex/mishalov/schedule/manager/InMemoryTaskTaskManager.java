@@ -1,9 +1,8 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
-import tasks.*;
+import ru.yandex.mishalov.schedule.tasks.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class InMemoryTaskTaskManager implements TaskManager {

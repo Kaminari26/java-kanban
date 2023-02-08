@@ -1,6 +1,6 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
-import tasks.Task;
+import ru.yandex.mishalov.schedule.tasks.Task;
 
 import java.util.*;
 

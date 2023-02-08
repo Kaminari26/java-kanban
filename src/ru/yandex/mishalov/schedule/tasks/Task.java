@@ -1,20 +1,41 @@
-package tasks;
+package ru.yandex.mishalov.schedule.tasks;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
     protected String name;
     protected String description;
-
     protected int id;
     protected TaskStatus status;
     protected TypeTask type;
     protected LocalDateTime startTime;
-
     protected Long duration;
+
+    public Task(String name, TypeTask type, String description, TaskStatus status) {
+        this.description = description;
+        this.name = name;
+        this.status = status;
+        this.type = type;
+    }
+
+    public Task(int id, TypeTask type, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
+    public Task(int id, TypeTask type, String name, TaskStatus status, String description, LocalDateTime startTime, Long duration) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.status = status;
+        this.description = description;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
 
     public Long getDuration() {
         return duration;
@@ -37,7 +58,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(duration) ;
+        return startTime.plusMinutes(duration);
     }
 
     public String getName() {
@@ -75,31 +96,6 @@ public class Task {
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
-    public Task(String name, TypeTask type, String description, TaskStatus status ){
-        this.description = description;
-        this.name = name;
-        this.status = status;
-        this.type = type;
-    }
-
-    public Task(int id, TypeTask type, String name,TaskStatus status, String description ) {
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.status = status;
-        this.description = description;
-
-    }
-    public Task(int id, TypeTask type, String name,TaskStatus status, String description, LocalDateTime startTime, Long duration  ) {
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.status = status;
-        this.description = description;
-        this.duration = duration;
-        this.startTime = startTime;
-
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -123,19 +119,6 @@ public class Task {
                 ", id=" + id +
                 ", status=" + status +
                 '}';
-    }
-
-    public int compareTo(Task task){
-        if (this.startTime == null) {
-            return 1;
-        } else if (task.getStartTime() == null) {
-            return -1;
-        } else if (this.startTime == null && task.getStartTime() == null) {
-            return 1;
-        } else if (this.startTime.isAfter(task.getStartTime())) {
-            return 1;
-        }
-        return -1;
     }
 }
 

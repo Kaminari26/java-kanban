@@ -1,4 +1,4 @@
-package tasks;
+package ru.yandex.mishalov.schedule.tasks;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -15,20 +15,16 @@ public class  Subtask extends Task {
         this.epicId = epicId;
     }
 
-    //  public Subtask(String name, TypeTask typeTask, String description, Integer epicId)  {
-    //    super(name,typeTask,description, TaskStatus.NEW);
-   //     this.epicId = epicId;
-  //  }
-
-    public Subtask(String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId)  {
+    public Subtask(String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId) {
         super(name,typeTask,description, status);
-         this.epicId = epicId;
+        this.epicId = epicId;
     }
 
-    public Subtask(int id, String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId)  {
+    public Subtask(int id, String name, TypeTask typeTask, String description, TaskStatus status, Integer epicId) {
         super(id,typeTask, name, status, description);
         this.epicId = epicId;
     }
+
     public Subtask(
                    int id,
                    String name,
@@ -41,6 +37,7 @@ public class  Subtask extends Task {
         super(id,typeTask, name, status, description,startTime,duration);
         this.epicId = epicId;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

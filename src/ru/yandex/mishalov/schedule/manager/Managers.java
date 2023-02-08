@@ -1,9 +1,9 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
 import java.io.File;
 
 public class Managers {
-    public static TaskManager getDefault(){
+    public static TaskManager getDefault() {
         return new FileBackedTasksManager(new File("resources/task.csv"));
 
     }

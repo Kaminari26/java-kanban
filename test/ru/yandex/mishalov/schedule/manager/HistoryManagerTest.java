@@ -1,10 +1,11 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.*;
+import ru.yandex.mishalov.schedule.manager.HistoryManager;
+import ru.yandex.mishalov.schedule.manager.InMemoryHistoryManager;
+import ru.yandex.mishalov.schedule.tasks.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

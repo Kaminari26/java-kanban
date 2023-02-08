@@ -1,25 +1,20 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.*;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>{
+class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     private File file;
 
     public FileBackedTasksManagerTest() {
         super(new FileBackedTasksManager(new File("./resources/historyManagerTest.csv")));
-
     }
+
     @BeforeEach
     public void setUp() {
         file = new File("./resources/historyManagerTest.csv");
@@ -53,9 +48,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertEquals(0, manager.getTaskList().size(), "Был загружен не пустой лист");
         file.delete();
 
-    } @Test
-    void loadFromFileNormalTest() {
+    }
 
+    @Test
+    void loadFromFileNormalTest() {
         File file = new File("./resources/HistoryManagerNormalTest.csv");
         FileBackedTasksManager managerLoadFile = FileBackedTasksManager.loadFromFile(file);
 
@@ -65,5 +61,4 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertEquals(3, manager.getTaskList().size(), "Неверное количество элементов в листе");
         assertEquals(manager.getHistory(), managerLoadFile.getHistory());
     }
-
 }

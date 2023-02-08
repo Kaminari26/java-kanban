@@ -1,8 +1,0 @@
-id,type,name,status,description,epic
-1,TASK,T1,NEW,asfas,
-2,TASK,T4,NEW,asf444444s,
-3,TASK,T2,NEW,as1111fas,
-5,SUBTASK,SUB,NEW,as1111fas,4
-4,EPIC,EP1,NEW,as1111fas,
-
-1,2,3

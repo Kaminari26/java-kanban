@@ -1,4 +1,4 @@
-package helpers;
+package ru.yandex.mishalov.schedule.helpers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

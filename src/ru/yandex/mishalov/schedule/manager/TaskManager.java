@@ -1,11 +1,9 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import ru.yandex.mishalov.schedule.tasks.Epic;
+import ru.yandex.mishalov.schedule.tasks.Subtask;
+import ru.yandex.mishalov.schedule.tasks.Task;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {

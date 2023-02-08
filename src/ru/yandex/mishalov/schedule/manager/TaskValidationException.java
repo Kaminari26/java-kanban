@@ -1,4 +1,4 @@
-package manager;
+package ru.yandex.mishalov.schedule.manager;
 
 public class TaskValidationException extends RuntimeException {
     public TaskValidationException(String message) {
