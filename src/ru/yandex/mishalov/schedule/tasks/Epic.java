@@ -39,6 +39,10 @@ public class Epic extends Task {
     }
 
     public Long getDuration() {
+        if(startTime == null || endTime == null)
+        {
+            return null;
+        }
         return Duration.between(startTime,endTime).toMinutes();
     }
 

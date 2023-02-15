@@ -1,23 +1,21 @@
 package ru.yandex.mishalov.schedule.manager;
 
+import com.google.gson.Gson;
 import ru.yandex.mishalov.schedule.tasks.*;
 
+import java.net.http.HttpClient;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskTaskManager implements TaskManager {
 
     protected final HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
-
-    protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    protected final Set<Task> prioritizedTasks = new TreeSet<>(Task::compareByTime);
 
     protected final Map<Integer, Task> tasks = new HashMap<>();
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected final Map<Integer, Subtask> subTasks = new HashMap<>();
     protected Integer countId = 0;
-
-
-
 
     @Override
     public void addTask(Task task) {
@@ -193,6 +191,11 @@ public class InMemoryTaskTaskManager implements TaskManager {
             final Subtask subtask = subTasks.get(id);
             final LocalDateTime startTime = subtask.getStartTime();
             final LocalDateTime endTime = subtask.getEndTime();
+            if(startTime == null || endTime == null)
+            {
+                continue;
+            }
+
             if (startTime.isBefore(start)) {
                 start = startTime;
             }
@@ -201,6 +204,12 @@ public class InMemoryTaskTaskManager implements TaskManager {
             }
             duration += subtask.getDuration();
         }
+
+        if(LocalDateTime.MAX.isEqual(start) || LocalDateTime.MIN.isEqual(end))
+        {
+            return;
+        }
+
         epic.setDuration(duration);
         epic.setStartTime(start);
         epic.setEndTime(end);
@@ -217,14 +226,17 @@ public class InMemoryTaskTaskManager implements TaskManager {
         for (Task t : prioritizedTasks) {
             final LocalDateTime existStart = t.getStartTime();
             final LocalDateTime existEnd = t.getEndTime();
-            if (!endTime.isAfter(existStart)) {// newTimeEnd <= existTimeStart
-                continue;
+            if (existStart != null) {
+                if (!endTime.isAfter(existStart)) {
+                    continue;
+                }
+                if (!existEnd.isAfter(startTime)) {
+                    continue;
+                }
+                throw new TaskValidationException("Задача пересекаются с id=" + t.getId() + " c " + existStart + " по " + existEnd);
             }
-            if (!existEnd.isAfter(startTime)) {// existTimeEnd <= newTimeStart
-                continue;
-            }
-            throw new TaskValidationException("Задача пересекаются с id=" + t.getId() + " c " + existStart + " по " + existEnd);
         }
+
         prioritizedTasks.add(task);
     }
 
@@ -260,6 +272,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
             epic.setStatus(TaskStatus.NEW);
         }
     }
+
 }
 
 

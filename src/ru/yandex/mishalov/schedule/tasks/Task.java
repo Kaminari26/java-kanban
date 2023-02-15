@@ -1,6 +1,9 @@
 package ru.yandex.mishalov.schedule.tasks;
 
+import ru.yandex.mishalov.schedule.helpers.LocalDateTimeHelper;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -17,6 +20,10 @@ public class Task {
         this.name = name;
         this.status = status;
         this.type = type;
+//        this.duration = 0l;
+//        LocalDateTime localDateTime = LocalDateTimeHelper.convertToLocalDateTime("14.02.2023 18:01");
+//        localDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+//        this.startTime = localDateTime;
     }
 
     public Task(int id, TypeTask type, String name, TaskStatus status, String description) {
@@ -38,6 +45,10 @@ public class Task {
     }
 
     public Long getDuration() {
+        if(duration == null)
+        {
+            return 0l;
+        }
         return duration;
     }
 
@@ -45,12 +56,9 @@ public class Task {
         this.duration = duration;
     }
 
-    public void setDuration2(long minutes) {
-        this.duration = minutes;
-    }
-
     public LocalDateTime getStartTime() {
-        return startTime;
+            return startTime;
+
     }
 
     public void setStartTime(LocalDateTime startTime) {
@@ -58,7 +66,11 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plusMinutes(duration);
+        if(startTime != null) {
+            return startTime.plusMinutes(duration);
+        }else {
+            return null;
+        }
     }
 
     public String getName() {
@@ -119,6 +131,18 @@ public class Task {
                 ", id=" + id +
                 ", status=" + status +
                 '}';
+    }
+    public int compareByTime(Task task){
+        if (this.startTime == null){
+            return 1;
+        } else if (task.getStartTime() == null) {
+            return -1;
+        } else if (this.startTime == null && task.getStartTime() == null) {
+            return 1;
+        } else if (this.startTime.isAfter(task.getStartTime())) {
+            return 1;
+        }
+        return -1;
     }
 }
 

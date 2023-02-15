@@ -27,8 +27,8 @@ public class CSVTaskFormat {
                 task.getStatus().toString(),
                 task.getDescription(),
                 (task.getType().equals(TypeTask.SUBTASK) ? ((Subtask)task).getEpicId().toString() : ""),
-                task.getStartTime().toString(),
-                task.getDuration().toString());
+                LocalDateTimeHelper.fromLocalDateTimeToString(task.getStartTime()),
+                String.valueOf(task.getDuration()));
         return str;
     }
 
