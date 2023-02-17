@@ -16,7 +16,6 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
     public File getFile() {
         return file;
     }
-
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
@@ -129,7 +128,6 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
         super.removeSubtask(id);
         save();
     }
-
     protected void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(CSVTaskFormat.getHeader());
@@ -176,6 +174,7 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
                     generatorId = id;
                 }
                 taskManager.addAnyTask(task);
+                taskManager.addToPrioritizedSet(task);
             }
             for (Map.Entry<Integer, Subtask> e : taskManager.subTasks.entrySet()) {
                 final Subtask subtask = e.getValue();
@@ -205,6 +204,7 @@ public class FileBackedTasksManager extends InMemoryTaskTaskManager  {
                 epics.put(id, (Epic) task);
                 break;
         }
+        countId = id;
     }
     protected Task findTask(Integer id) {
         final Task task = tasks.get(id);

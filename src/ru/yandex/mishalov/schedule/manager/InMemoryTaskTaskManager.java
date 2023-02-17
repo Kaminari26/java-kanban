@@ -1,9 +1,7 @@
 package ru.yandex.mishalov.schedule.manager;
 
-import com.google.gson.Gson;
 import ru.yandex.mishalov.schedule.tasks.*;
 
-import java.net.http.HttpClient;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,17 +22,17 @@ public class InMemoryTaskTaskManager implements TaskManager {
                 task.setId(countId);
                 tasks.put(countId, task);
             }
-        add(task);
+        addToPrioritizedSet(task);
     }
 
     @Override
     public void addEpic(Epic epic) {
-            if (epic.getType().equals(TypeTask.EPIC)) {
-                countId++;
-                epic.setId(countId);
-                epics.put(countId, epic);
-            }
-
+        if (epic.getType().equals(TypeTask.EPIC)) {
+            countId++;
+            epic.setId(countId);
+            epics.put(countId, epic);
+        }
+        addToPrioritizedSet(epic);
     }
 
     @Override
@@ -48,7 +46,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
                     updateEpic(subtask.getEpicId());
                 }
             }
-        add(subtask);
+        addToPrioritizedSet(subtask);
         }
 
     @Override
@@ -116,7 +114,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
             return;
         }
         tasks.put(newTask.getId(), newTask);
-        add(newTask);
+        addToPrioritizedSet(newTask);
     }
 
     @Override
@@ -142,7 +140,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
         }
         subTasks.put(newSubtask.getId(), newSubtask);
         updateEpic(newSubtask.getEpicId());
-        add(newSubtask);
+        addToPrioritizedSet(newSubtask);
     }
 
     @Override
@@ -161,6 +159,11 @@ public class InMemoryTaskTaskManager implements TaskManager {
 
         epics.remove(id);
         inMemoryHistoryManager.remove(id);
+    }
+
+    @Override
+    public List<Integer> getSubTaskByEpicId(int epicId) {
+        return List.copyOf(epics.get(epicId).getSubtaskIds());
     }
 
     @Override
@@ -220,7 +223,7 @@ public class InMemoryTaskTaskManager implements TaskManager {
         updateEpicDuration(epic);
     }
 
-    private void add(Task task) {
+    protected void addToPrioritizedSet(Task task) {
         final LocalDateTime startTime = task.getStartTime();
         final LocalDateTime endTime = task.getEndTime();
         for (Task t : prioritizedTasks) {

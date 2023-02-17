@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/KVServer/KVServer.iml" filepath="$PROJECT_DIR$/KVServer/KVServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KVTaskClient/KVTaskClient.iml" filepath="$PROJECT_DIR$/KVTaskClient/KVTaskClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/TZsprint3.iml" filepath="$PROJECT_DIR$/TZsprint3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/untitled/untitled.iml" filepath="$PROJECT_DIR$/untitled/untitled.iml" />
-      <module fileurl="file://$PROJECT_DIR$/untitled1/untitled1.iml" filepath="$PROJECT_DIR$/untitled1/untitled1.iml" />
     </modules>
   </component>
 </project>

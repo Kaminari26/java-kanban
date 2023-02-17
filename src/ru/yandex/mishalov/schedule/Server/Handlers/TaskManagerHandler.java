@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.mishalov.schedule.Server.Endpoint;
 import ru.yandex.mishalov.schedule.manager.TaskManager;
+import ru.yandex.mishalov.schedule.tasks.Epic;
 import ru.yandex.mishalov.schedule.tasks.Subtask;
 import ru.yandex.mishalov.schedule.tasks.Task;
 
@@ -52,15 +53,72 @@ public final class TaskManagerHandler implements HttpHandler {
             case DELETE_ALL_TASKS: {
                 manager.clearAllTask();
                 writeResponse(exchange, "Все таски были удалены", 200);
+                break;
             }
             case GET_SUBTASKS: {
                 writeResponse(exchange, gson.toJson(manager.getSubtaskList()), 200);
+                break;
             }
             case GET_SUBTASKS_ID: {
                 handleGetSubTask(exchange);
+                break;
             }
-            case ADD_SUBTASK:{
+            case ADD_SUBTASK: {
                 handlePostNewSubtask(exchange);
+                break;
+            }
+            case DELETE_SUBTASK: {
+                handleDeleteSubTask(exchange);
+                break;
+            }
+            case DELETE_ALL_SUBTASKS: {
+                manager.clearAllSubtask();
+                writeResponse(exchange, "Все сабтаски были удалены", 200);
+                break;
+            }
+            case UPDATE_TASK: {
+                handleUpdateTask(exchange);
+                break;
+            }
+            case UPDATE_SUBTASK: {
+                handlePostUpdateSubtask(exchange);
+                break;
+            }
+            case GET_EPICS: {
+                writeResponse(exchange, gson.toJson(manager.getEpicList()), 200);
+                break;
+            }
+            case GET_EPIC_ID: {
+                handleGetEpic(exchange);
+                break;
+            }
+            case GET_PRIORITIZED_TASKS: {
+                handleGetPrioritizedTasks(exchange);
+                break;
+            }
+            case ADD_EPIC: {
+                handlePostNewEpic(exchange);
+                break;
+            }
+            case UPDATE_EPIC: {
+                handleUpdateEpic(exchange);
+                break;
+            }
+            case DELETE_EPIC: {
+                handleDeleteEpic(exchange);
+                break;
+            }
+            case DELETE_ALL_EPICS: {
+                manager.clearAllEpic();
+                writeResponse(exchange, "Все Эпики были удалены", 200);
+                break;
+            }
+            case GET_SUBTASKS_EPIC: {
+                handleGetEpicSubtasks(exchange);
+                break;
+            }
+            case GET_HISTORY: {
+                writeResponse(exchange, gson.toJson(manager.getHistory()), 200);
             }
             default:
                 writeResponse(exchange, "Запрос не распознан", 404);
@@ -93,26 +151,78 @@ public final class TaskManagerHandler implements HttpHandler {
     private Endpoint getEndpoint(String requestPath, String requestMethod, String query) {
         String[] pathParts = requestPath.split("/");
 
-        if (requestMethod.equals("GET")) {
-            if (pathParts[2].equals("task") && query == null) {
-                return Endpoint.GET_TASKS;
-            } else if (pathParts[2].equals("task") && query != null) {
-                return Endpoint.GET_TASKS_ID;
-            }
-            if (pathParts[2].equals("subtask") && query == null){
-                return Endpoint.GET_SUBTASKS;
-            }
-        } else if (requestMethod.equals("POST")) {
-            if (pathParts[2].equals("task")) {
-                return Endpoint.ADD_TASK;
-            }
-        } else if (requestMethod.equals("DELETE")) {
-            if (pathParts[2].equals("task") && query != null) {
-                return Endpoint.DELETE_TASK;
-            } else if (pathParts[2].equals("task") && query == null) {
-                return Endpoint.DELETE_ALL_TASKS;
-            }
+        switch (requestMethod) {
+            case "GET":
+                if(pathParts.length == 2 && query == null) {
+                    return Endpoint.GET_PRIORITIZED_TASKS;
+                }
+                switch (pathParts[2]) {
+                    case "task": {
+                        if (pathParts.length == 3 && query == null) {
+                            return Endpoint.GET_TASKS;
+                        }
+                        return Endpoint.GET_TASKS_ID;
+                    }
+
+                    case "subtask": {
+                        if (pathParts.length == 3 && query == null) {
+                            return Endpoint.GET_SUBTASKS;
+                        }
+                        else if (pathParts[3].equals("epic")) {
+                            return Endpoint.GET_SUBTASKS_EPIC;
+                        }
+                        return Endpoint.GET_SUBTASKS_ID;
+                    }
+                    case "epic": {
+                        if (pathParts.length == 3 && query == null) {
+                            return Endpoint.GET_EPICS;
+                        }
+                        return Endpoint.GET_EPIC_ID;
+                    }
+                    case "history": {
+                        return Endpoint.GET_HISTORY;
+                    }
+                }
+            case "POST":
+                switch (pathParts[2]) {
+                    case "task":
+                        if (pathParts.length == 3 && query == null) {
+                        return Endpoint.ADD_TASK;
+                    }
+                        return Endpoint.UPDATE_TASK;
+
+                    case "subtask":
+                        if (pathParts.length == 3 && query == null) {
+                            return Endpoint.ADD_SUBTASK;
+                        }
+                        return Endpoint.UPDATE_SUBTASK;
+
+                    case "epic":
+                        if (pathParts.length == 3 && query == null) {
+                            return Endpoint.ADD_EPIC;
+                        }
+                        return Endpoint.UPDATE_EPIC;
+                }
+                case "DELETE":
+                    switch (pathParts[2]) {
+                        case "task":
+                            if (pathParts.length == 3 && query == null) {
+                            return Endpoint.DELETE_ALL_TASKS;
+                }
+                            return Endpoint.DELETE_TASK;
+                        case "subtask":
+                            if (pathParts.length == 3 && query == null) {
+                                return Endpoint.DELETE_ALL_SUBTASKS;
+                            }
+                            return Endpoint.DELETE_SUBTASK;
+                        case "epic":
+                            if (pathParts.length == 3 && query == null) {
+                                return Endpoint.DELETE_ALL_EPICS;
+                            }
+                            return Endpoint.DELETE_EPIC;
+                    }
         }
+
         return Endpoint.UNKNOWN;
     }
 
@@ -121,21 +231,108 @@ public final class TaskManagerHandler implements HttpHandler {
         String body = new String(is.readAllBytes(), DEFAULT_CHARSET);
         return body;
     }
-       private void handleGetTask(HttpExchange exchange) throws IOException {
 
+    private  void handleGetPrioritizedTasks(HttpExchange exchange) throws IOException {
+        writeResponse(exchange,gson.toJson(manager.getPrioritizedTasks()), 200);
+    }
+
+    private  void handleGetEpic(HttpExchange exchange) throws IOException {
         Optional<Integer> optionalInteger = targetId(exchange);
-         if (optionalInteger.isEmpty()) {
+        if (optionalInteger.isEmpty()) {
+            writeResponse(exchange, "Некорректный идентификатор задачи", 400);
+            return;
+        }
+        int id = optionalInteger.get();
+        if (manager.getEpic(id) != null) {
+            writeResponse(exchange, gson.toJson(manager.getEpic(id)), 200);
+            return;
+        }
+        writeResponse(exchange, "Задача с идентификатором " + id + " не найдена", 404);
+    }
+
+    private void handleGetEpicSubtasks(HttpExchange exchange) throws IOException {
+        Optional<Integer> optionalInteger = targetId(exchange);
+        if (optionalInteger.isEmpty()) {
+            writeResponse(exchange, "Некорректный идентификатор эпика", 400);
+            return;
+        }
+        int id = optionalInteger.get();
+        if (manager.getEpic(id) != null) {
+            if (manager.getSubTaskByEpicId(id) != null) {
+                writeResponse(exchange, gson.toJson(manager.getSubTaskByEpicId(id)), 200);
+                return;
+            }
+            writeResponse(exchange, "У эпика с идентификатором " + id + " нет подзадач.", 404);
+            return;
+        }
+        writeResponse(exchange, "Эпик с идентификатором " + id + " не найден, нельзя вывести подзадачи", 404);
+    }
+
+    private void handlePostNewEpic(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
+        Epic newEpic;
+        try {
+            newEpic = gson.fromJson(body, Epic.class);
+        } catch (JsonSyntaxException ex) {
+            writeResponse(exchange, "Получен некорректный JSON", 400);
+            return;
+        }
+        manager.addEpic(newEpic);
+        writeResponse(exchange, "Задача добавлена", 200);
+    }
+
+    private void handleDeleteEpic(HttpExchange exchange) throws IOException {
+        Optional<Integer> optionalInteger = targetId(exchange);
+        if (optionalInteger.isEmpty()) {
+            writeResponse(exchange, "Некорректный идентификатор задачи", 400);
+            return;
+        }
+        int id = optionalInteger.get();
+        if (manager.getEpic(id) != null) {
+            manager.removeEpic(id);
+            writeResponse(exchange, "Эпик успешно удален", 200);
+        }else {
+            writeResponse(exchange, "Задача с идентификатором " + id + " не найдена", 404);
+        }
+    }
+
+    private void handleUpdateEpic(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
+        Epic newEpic;
+        try {
+            newEpic = gson.fromJson(body, Epic.class);
+        } catch (JsonSyntaxException ex) {
+            writeResponse(exchange, "Получен некорректный JSON", 400);
+            return;
+        }
+        Optional<Integer> optionalInteger = targetId(exchange);
+        if (optionalInteger.isEmpty()) {
+            writeResponse(exchange, "Некорректный идентификатор задачи", 400);
+            return;
+        }
+        int id = optionalInteger.get();
+        if (manager.getEpic(id) != null) {
+            manager.updateEpic(newEpic);
+            writeResponse(exchange, "Задача " + id + " обновлена", 200);
+            return;
+        }
+        writeResponse(exchange, "Задача с идентификатором " + id + " не найдена", 404);
+    }
+
+    private void handleGetTask(HttpExchange exchange) throws IOException {
+        Optional<Integer> optionalInteger = targetId(exchange);
+        if (optionalInteger.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор задачи", 400);
              return;
-          }
-         int id = optionalInteger.get();
-         if (manager.getTask(id) != null) {
-             writeResponse(exchange, gson.toJson(manager.getTask(id)), 200);
-
+        }
+        int id = optionalInteger.get();
+        if (manager.getTask(id) != null) {
+            writeResponse(exchange, gson.toJson(manager.getTask(id)), 200);
             return;
-         }
+        }
         writeResponse(exchange, "Задача с идентификатором " + id + " не найдена", 404);
-     }
+    }
+
     private void handlePostNewTask(HttpExchange exchange) throws IOException {
         String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
         Task newTask;
@@ -157,8 +354,8 @@ public final class TaskManagerHandler implements HttpHandler {
             writeResponse(exchange, "Задача не найдена", 404);
         }
     }
-    private void handleGetSubTask(HttpExchange exchange) throws IOException {
 
+    private void handleGetSubTask(HttpExchange exchange) throws IOException {
         Optional<Integer> optionalInteger = targetId(exchange);
         if (optionalInteger.isEmpty()) {
             writeResponse(exchange, "Некорректный идентификатор подзадачи", 400);
@@ -166,12 +363,12 @@ public final class TaskManagerHandler implements HttpHandler {
         }
         int id = optionalInteger.get();
         if (manager.getSubtask(id) != null) {
-            writeResponse(exchange, gson.toJson(manager.getSubtask(id)), 200);
-
+            writeResponse(exchange, gson.toJson(manager.getSubtask(id).toString()), 200);
             return;
         }
-        writeResponse(exchange, "подзадача с идентификатором " + id + " не найдена", 404);
+        writeResponse(exchange, "Подзадача с идентификатором " + id + " не найдена", 404);
     }
+
    private void handlePostNewSubtask(HttpExchange exchange) throws  IOException {
        String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
        Subtask newSubtask;
@@ -181,8 +378,68 @@ public final class TaskManagerHandler implements HttpHandler {
            writeResponse(exchange, "Получен некорректный JSON", 400);
            return;
        }
-       manager.addTask(newSubtask);
+       if (manager.getEpic(newSubtask.getEpicId()) == null){
+           writeResponse(exchange, "Некорректный id эпика", 404);
+       }
+       manager.addSubTask(newSubtask);
        writeResponse(exchange, "подзадача добавлена", 200);
    }
+
+   private void handleDeleteSubTask(HttpExchange exchange) throws IOException {
+       if (manager.getSubtask(targetId(exchange).get()) != null) {
+           manager.removeSubtask(targetId(exchange).get());
+           writeResponse(exchange, "Задача удалена успешно!", 200);
+       } else {
+           writeResponse(exchange, "Задача не найдена", 404);
+       }
+   }
+
+    private void handleUpdateTask(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
+        Task newTask;
+        try {
+            newTask = gson.fromJson(body, Task.class);
+        } catch (JsonSyntaxException ex) {
+            writeResponse(exchange, "Получен некорректный JSON", 400);
+            return;
+        }
+        Optional<Integer> optionalInteger = targetId(exchange);
+        if (optionalInteger.isEmpty()) {
+            writeResponse(exchange, "Некорректный идентификатор задачи", 400);
+            return;
+        }
+        int id = optionalInteger.get();
+        if (manager.getTask(id) != null) {
+           manager.updateTask(newTask);
+                writeResponse(exchange, "Задача " + id + " обновлена", 200);
+                return;
+
+        }
+        writeResponse(exchange, "Задача с идентификатором " + id + " не найдена", 404);
+    }
+
+    private void handlePostUpdateSubtask(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
+        Subtask newSubtask;
+        try {
+            newSubtask = gson.fromJson(body, Subtask.class);
+        } catch (JsonSyntaxException ex) {
+            writeResponse(exchange, "Получен некорректный JSON", 400);
+            return;
+        }
+        Optional<Integer> optionalInteger = targetId(exchange);
+        if (optionalInteger.isEmpty()) {
+            writeResponse(exchange, "Некорректный идентификатор подзадачи", 400);
+            return;
+        }
+        int id = optionalInteger.get();
+        if (manager.getSubtask(id) != null) {
+            manager.updateSubtask(newSubtask);
+                writeResponse(exchange, "Подзадача " + id + " обновлена", 200);
+        }
+        writeResponse(exchange, "Подзадача с идентификатором " + id + " не найдена", 404);
+    }
+
 }
+
 
