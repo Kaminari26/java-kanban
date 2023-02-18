@@ -1,4 +1,4 @@
-package ru.yandex.mishalov.schedule.Server;
+package ru.yandex.mishalov.schedule.server;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -40,15 +40,14 @@ public class KVServer {
                     h.sendResponseHeaders(400, 0);
                     return;
                 }
-                if (data.containsKey(key)) {
-                    sendText(h, data.get(key));
+                if (!data.containsKey(key)) {
+                    System.out.println("Не могу достать данные для ключа '" + key + "', данные отсутствуют");
+                    h.sendResponseHeaders(404, 0);
                     return;
                 }
-                System.out.println("Ключ не найден");
-                h.sendResponseHeaders(404, 0);
-            } else {
-                System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
-                h.sendResponseHeaders(405, 0);
+                sendText(h, data.get(key));
+                System.out.println("Значение для ключа " + key + " успешно отправлено в ответ на запрос!");
+                h.sendResponseHeaders(200, 0);
             }
     }
 

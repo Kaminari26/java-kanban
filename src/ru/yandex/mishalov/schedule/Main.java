@@ -1,17 +1,14 @@
-import com.sun.net.httpserver.HttpServer;
-import ru.yandex.mishalov.schedule.KVTaskClient;
-import ru.yandex.mishalov.schedule.Server.HttpTaskServer;
-import ru.yandex.mishalov.schedule.Server.KVServer;
+package ru.yandex.mishalov.schedule;
+
+import ru.yandex.mishalov.schedule.server.HttpTaskServer;
+import ru.yandex.mishalov.schedule.server.KVServer;
 import ru.yandex.mishalov.schedule.manager.FileBackedTasksManager;
 import ru.yandex.mishalov.schedule.manager.HttpTaskManager;
-import ru.yandex.mishalov.schedule.manager.Managers;
 import ru.yandex.mishalov.schedule.manager.TaskManager;
 import ru.yandex.mishalov.schedule.tasks.*;
 
-
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -43,19 +40,10 @@ public class Main {
         System.out.println(tasksManager.getEpicList());
         tasksManager.removeSubtask(6);
         System.out.println(tasksManager.getSubtaskList());
-
-      //  System.out.println("history: " + tasksManager.getHistory());
-     //   System.out.println("Tasks: " + tasksManager.getTaskList());
-
-//        File file = new File("./resources/task.csv");
-//        FileBackedTasksManager managerFromFile = FileBackedTasksManager.loadFromFile(file);
-//        System.out.println("history : " + managerFromFile.getHistory());
-//        System.out.println("Tasks: " + managerFromFile.getTaskList());
         KVServer kvServer = new KVServer();
         kvServer.start();
         TaskManager httpManager = new HttpTaskManager("http://localhost:8078");
         HttpTaskServer taskServer = new HttpTaskServer(httpManager);
-        taskServer.StartServer();
         httpManager.addTask(task1);
         httpManager.addTask(task1);
     }

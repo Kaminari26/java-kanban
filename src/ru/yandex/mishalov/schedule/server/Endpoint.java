@@ -1,4 +1,4 @@
-package ru.yandex.mishalov.schedule.Server;
+package ru.yandex.mishalov.schedule.server;
 
 public enum Endpoint {
     UNKNOWN,
